@@ -2,13 +2,13 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { TABLER_ICON } from '@/constants/tabler';
-import { IconBrandGoogleDrive, IconFolder, IconUpload } from '@tabler/icons-react';
+import { IconBrain, IconBrandGoogleDrive, IconUpload } from '@tabler/icons-react';
 
-export function KnowledgeBaseNavigation() {
+export function KnowledgeBaseNavigation(): JSX.Element {
   return (
     <nav className="KnowledgeBaseNavigation-container border-b p-2 flex items-center justify-between">
       <div className="flex items-center justify-start gap-1.5">
-        <IconFolder size={TABLER_ICON.SIZE} />
+        <IconBrain size={TABLER_ICON.SIZE} />
         <p className="font-medium text-sm cursor-pointer">Knowledge Base</p>/
         <Input value="Frontend Assignment" readOnly />
       </div>

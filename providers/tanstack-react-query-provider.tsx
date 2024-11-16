@@ -8,6 +8,6 @@ export function TanStackReactQueryProvider({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>): JSX.Element {
   return <QueryClientProvider client={createReactQueryClient}>{children}</QueryClientProvider>;
 }
