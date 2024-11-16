@@ -12,7 +12,7 @@ button::before,
 input::before,
 button::after,
 input::after {
-  @apply focus-visible:outline focus-visible:outline-neutral-400 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-neutral-300;
+  @apply focus-visible:outline focus-visible:outline-neutral-300 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-neutral-300;
 }
 
 @layer base {

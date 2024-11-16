@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { IconBrandGoogleDrive, IconBrandNotion, IconDatabase, IconFile, IconFileSpreadsheet, IconPresentation } from '@tabler/icons-react';
 import { KNOWLEDGE_BASE_EMPTY_STATE_DOCUMENTATION_URL } from './constants/main';
 
-export function KnowledgeBaseEmptyState({ className, children: _, ...props }: React.HTMLAttributes<HTMLDivElement>): JSX.Element {
+export function KnowledgeBaseEmptyState({ className, ...props }: Omit<React.HTMLAttributes<HTMLDivElement>, 'children'>): JSX.Element {
   return (
     <section className={cn('KnowledgeBaseEmptyState-container flex items-center justify-center select-none', className)} {...props}>
       <div className="KnowledgeBaseEmptyState-content-wrapper w-[420px] flex flex-col items-start gap-4">

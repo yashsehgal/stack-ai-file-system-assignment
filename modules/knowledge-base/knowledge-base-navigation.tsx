@@ -36,6 +36,8 @@ export function KnowledgeBaseNavigation(): JSX.Element {
       clearTimeout(timeoutRef.current);
     }
 
+    e.currentTarget.blur();
+
     // Set new timeout and store reference
     timeoutRef.current = setTimeout(() => {
       setShowRenameMessage(false);
