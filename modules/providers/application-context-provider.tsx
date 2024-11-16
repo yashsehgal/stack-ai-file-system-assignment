@@ -1,3 +1,4 @@
+'use client';
 import { useState } from 'react';
 import { INITIAL_APPLICATION_CONTEXT_DATA } from '../constants/main';
 import { ApplicationContextType } from '../interfaces/application-context-type';
