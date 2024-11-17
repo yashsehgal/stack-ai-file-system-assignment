@@ -10,4 +10,6 @@ export type ApplicationContextType = {
 
   googleDriveFolderContents: { [key: string]: Resource[] };
   setGoogleDriveFolderContents: React.Dispatch<SetStateAction<{ [key: string]: Resource[] }>>;
+
+  resetSelectedFiles: () => void;
 };

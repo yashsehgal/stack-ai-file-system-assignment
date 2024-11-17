@@ -12,6 +12,10 @@ export function ApplicationContextProvider({ children }: { children: React.React
   );
   const [googleDriveFolderContents, setGoogleDriveFolderContents] = useState<{ [key: string]: Resource[] }>({});
 
+  const resetSelectedFiles = () => {
+    setGoogleDriveSelectedFiles(INITIAL_APPLICATION_CONTEXT_DATA.googleDriveSelectedFiles);
+  };
+
   const ProviderData: ApplicationContextType = {
     knowledgeBaseTitle,
     setKnowledgeBaseTitle,
@@ -19,6 +23,7 @@ export function ApplicationContextProvider({ children }: { children: React.React
     setGoogleDriveSelectedFiles,
     googleDriveFolderContents,
     setGoogleDriveFolderContents,
+    resetSelectedFiles,
   } as const;
 
   useEffect(() => console.log('selected files', googleDriveSelectedFiles), [googleDriveSelectedFiles]);

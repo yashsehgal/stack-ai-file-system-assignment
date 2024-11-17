@@ -10,7 +10,7 @@ import { ApplicationContext } from '../contexts/application-context';
 import { GoogleDriveUpload } from '../google-drive-upload';
 
 export function KnowledgeBaseNavigation(): JSX.Element {
-  const { knowledgeBaseTitle, setKnowledgeBaseTitle } = useContext(ApplicationContext);
+  const { knowledgeBaseTitle, setKnowledgeBaseTitle, resetSelectedFiles } = useContext(ApplicationContext);
   const [knowledgeBaseTitleInput, setKnowledgeBaseTitleInput] = useState<string>(
     knowledgeBaseTitle || INITIAL_APPLICATION_CONTEXT_DATA.knowledgeBaseTitle,
   );
@@ -48,7 +48,7 @@ export function KnowledgeBaseNavigation(): JSX.Element {
         <Button variant="secondary" size="sm">
           Share
         </Button>
-        <Dialog>
+        <Dialog onOpenChange={resetSelectedFiles}>
           <DialogTrigger asChild>
             <Button size="sm" leftIcon={IconUpload}>
               Upload files
