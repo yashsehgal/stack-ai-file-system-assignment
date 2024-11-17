@@ -1,14 +1,15 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { TABLER_ICON } from '@/constants/tabler';
-import { IconBrain, IconBrandGoogleDrive, IconUpload } from '@tabler/icons-react';
-import { ChangeEvent, KeyboardEvent, useContext, useEffect, useRef, useState } from 'react';
-import { ApplicationContext } from '../contexts/application-context';
-import { INITIAL_APPLICATION_CONTEXT_DATA } from '../constants/main';
-import { KNOWLEDGE_BASE_RENAME_STATE_DELAY } from './constants/main';
+import { IconBrain, IconUpload } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
+import { ChangeEvent, KeyboardEvent, useContext, useEffect, useRef, useState } from 'react';
+import { INITIAL_APPLICATION_CONTEXT_DATA } from '../constants/main';
+import { ApplicationContext } from '../contexts/application-context';
+import { GoogleDriveUpload } from '../google-drive-upload';
+import { KNOWLEDGE_BASE_RENAME_STATE_DELAY } from './constants/main';
 
 export function KnowledgeBaseNavigation(): JSX.Element {
   const { knowledgeBaseTitle, setKnowledgeBaseTitle } = useContext(ApplicationContext);
@@ -77,19 +78,16 @@ export function KnowledgeBaseNavigation(): JSX.Element {
         <Button variant="secondary" size="sm">
           Share
         </Button>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+        <Dialog>
+          <DialogTrigger asChild>
             <Button size="sm" leftIcon={IconUpload}>
               Upload files
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[240px]">
-            <DropdownMenuItem>
-              <IconBrandGoogleDrive />
-              <span>Google Drive</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </DialogTrigger>
+          <DialogContent>
+            <GoogleDriveUpload />
+          </DialogContent>
+        </Dialog>
       </div>
     </nav>
   );

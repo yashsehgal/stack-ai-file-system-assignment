@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { IconBrandGoogleDrive, IconBrandNotion, IconDatabase, IconFile, IconFileSpreadsheet, IconPresentation } from '@tabler/icons-react';
 import { KNOWLEDGE_BASE_EMPTY_STATE_DOCUMENTATION_URL } from './constants/main';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { GoogleDriveUpload } from '../google-drive-upload';
 
 export function KnowledgeBaseEmptyState({ className, ...props }: Omit<React.HTMLAttributes<HTMLDivElement>, 'children'>): JSX.Element {
   return (
@@ -26,7 +28,14 @@ export function KnowledgeBaseEmptyState({ className, ...props }: Omit<React.HTML
           </p>
         </div>
         <div className="flex items-center gap-2 mt-2">
-          <Button leftIcon={IconBrandGoogleDrive}>Upload using Google Drive</Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button leftIcon={IconBrandGoogleDrive}>Upload using Google Drive</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <GoogleDriveUpload />
+            </DialogContent>
+          </Dialog>
           <Button variant="ghost" onClick={() => window.open(KNOWLEDGE_BASE_EMPTY_STATE_DOCUMENTATION_URL)}>
             Documentation
           </Button>
