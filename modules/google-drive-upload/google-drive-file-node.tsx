@@ -2,7 +2,7 @@ import { TABLER_ICON } from '@/constants/tabler';
 import { cn } from '@/lib/utils';
 import { fetchFolderContents } from '@/services/google-drive-setup';
 import { Resource } from '@/services/interfaces';
-import { IconChevronRight, IconFile, IconFolder, IconFolderFilled, IconLoader2 } from '@tabler/icons-react';
+import { IconChevronRight, IconFile, IconFolder, IconFolderOpen } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useContext, useState } from 'react';
 import { GoogleDriveFileNodeProps } from './interfaces/main';
@@ -57,7 +57,11 @@ export function GoogleDriveFileNode({ resource, level = 1, connectionUrls }: Goo
           {IS_FOLDER ? (
             <>
               <IconChevronRight size={TABLER_ICON.SIZE} className={cn('transition-all', isNodeOpen ? 'rotate-90' : '')} />
-              <IconFolderFilled size={TABLER_ICON.SIZE} className="text-blue-400" />
+              {isNodeOpen ? (
+                <IconFolderOpen size={TABLER_ICON.SIZE} className="fill-blue-400" />
+              ) : (
+                <IconFolder size={TABLER_ICON.SIZE} className="fill-blue-400" />
+              )}
             </>
           ) : (
             <div className="ml-5">
