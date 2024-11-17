@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { INITIAL_APPLICATION_CONTEXT_DATA } from '../constants/main';
 import { ApplicationContextType } from '../interfaces/application-context-type';
 import { ApplicationContext } from '../contexts/application-context';
+import { Resource } from '@/services/interfaces';
 
 export function ApplicationContextProvider({ children }: { children: React.ReactNode }): JSX.Element {
   const [knowledgeBaseTitle, setKnowledgeBaseTitle] = useState<string>(INITIAL_APPLICATION_CONTEXT_DATA.knowledgeBaseTitle);

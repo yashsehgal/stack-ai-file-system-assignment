@@ -9,12 +9,13 @@ export interface AuthRequestBody {
 }
 
 export interface Resource {
-  inode_type: string; // 'directory' or 'file'
+  inode_type: 'directory' | 'file';
   inode_path: {
     path: string;
   };
   resource_id: string;
   status?: string;
+  children?: Resource[];
 }
 
 interface IndexingParams {

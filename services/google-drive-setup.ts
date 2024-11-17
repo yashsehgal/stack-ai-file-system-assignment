@@ -96,7 +96,7 @@ export async function getConnectionUrls(): Promise<{ connectionResourcesUrl: str
   };
 }
 
-export async function getRootResources(): Promise<void> {
+export async function getRootResources(): Promise<Resource[] | undefined> {
   const { childrenResourcesUrl } = await getConnectionUrls();
 
   try {
@@ -112,15 +112,9 @@ export async function getRootResources(): Promise<void> {
       return;
     }
 
-    // Loop through the resources and print information
-    rootResources.forEach((resource) => {
-      const emoji = resource.inode_type === 'directory' ? '📁' : '📄';
-      console.log(`${emoji} ${resource.inode_path.path.padEnd(30)} (resource_id: ${resource.resource_id})`);
-    });
+    console.log('ROOT', rootResources);
 
-    // Optionally print raw response for debugging
-    console.log('\n\nRaw response:');
-    console.log(response);
+    return rootResources;
   } catch (error) {
     if (error instanceof AxiosError) {
       console.error('Error fetching root resources:', error.response?.data || error.message);
@@ -170,5 +164,45 @@ export async function getSpecificFile(resourceId: string, resourcesUrl: string):
     } else {
       console.error('An unexpected error occurred:', error);
     }
+  }
+}
+
+export async function fetchFolderContents(resourceId: string, resourcesUrl: string): Promise<Resource[]> {
+  // Prepare query parameters
+  const data = { resource_id: resourceId };
+  const encodedQueryParams = new URLSearchParams(data).toString();
+  const url = `${resourcesUrl}?${encodedQueryParams}`;
+
+  try {
+    // Send the GET request using the GoogleDriveSession
+    const response = await GoogleDriveSession.get(url);
+
+    // Check if the response is empty
+    let resources: Resource[] = response.data;
+
+    if (resources.length === 0) {
+      console.log('No resources found');
+      return [];
+    }
+
+    // If response is a dictionary, convert it to an array (handle single resource case)
+    if (resources && !Array.isArray(resources)) {
+      resources = [resources];
+    }
+
+    // Log resources for debugging
+    resources.forEach((resource) => {
+      const emoji = resource.inode_type === 'directory' ? '📁' : '📄';
+      console.log(`${emoji} ${resource.inode_path.path.padEnd(30)} (resource_id: ${resource.resource_id})`);
+    });
+
+    return resources;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.error('Error fetching resources:', error.response?.data || error.message);
+    } else {
+      console.error('An unexpected error occurred:', error);
+    }
+    throw error;
   }
 }

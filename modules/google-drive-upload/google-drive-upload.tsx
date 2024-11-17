@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { GoogleDriveFileTree } from './google-drive-file-tree';
 
 export function GoogleDriveUpload(): JSX.Element {
   return (
@@ -7,7 +8,9 @@ export function GoogleDriveUpload(): JSX.Element {
       <DialogHeader>
         <DialogTitle>Upload using Google Drive</DialogTitle>
       </DialogHeader>
-      <div className="GoogleDriveUpload-container"></div>
+      <div className="GoogleDriveUpload-container">
+        <GoogleDriveFileTree />
+      </div>
       <DialogFooter className="sm:justify-between gap-2">
         <Button size="sm" variant="secondary" className="shrink-0">
           Cancel
