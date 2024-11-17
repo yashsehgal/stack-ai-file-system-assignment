@@ -14,4 +14,31 @@ export interface Resource {
     path: string;
   };
   resource_id: string;
+  status?: string;
+}
+
+interface IndexingParams {
+  ocr: boolean;
+  unstructured: boolean;
+  embedding_params: {
+    embedding_model: string;
+    api_key: string | null;
+  };
+  chunker_params: {
+    chunk_size: number;
+    chunk_overlap: number;
+    chunker: string;
+  };
+}
+
+export interface CreateKbData {
+  connection_id: string;
+  connection_source_ids: string[];
+  indexing_params: IndexingParams;
+  org_level_role: string | null;
+  cron_job_id: string | null;
+}
+
+export interface KnowledgeBaseResponse {
+  knowledge_base_id: string;
 }

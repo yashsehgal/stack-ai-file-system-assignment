@@ -6,7 +6,7 @@ import { AuthRequestBody, AuthResponse, Resource } from './interfaces';
 import { STACK_AI_BACKEND_URL } from '@/constants/main';
 
 // Creating a session for Google Drive related operations
-const GoogleDriveSession = axios.create();
+export const GoogleDriveSession = axios.create();
 
 export async function getAuthHeaders(email: string, password: string): Promise<{ Authorization: string }> {
   const authApi: AxiosInstance = axios.create({
