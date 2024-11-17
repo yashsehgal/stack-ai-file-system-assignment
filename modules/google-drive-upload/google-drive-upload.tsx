@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { GoogleDriveFileTree } from './google-drive-file-tree';
-import { useContext } from 'react';
-import { ApplicationContext } from '../contexts/application-context';
 import { motion } from 'framer-motion';
+import { useContext } from 'react';
 import { INITIAL_APPLICATION_CONTEXT_DATA } from '../constants/main';
+import { ApplicationContext } from '../contexts/application-context';
+import { GoogleDriveFileTree } from './google-drive-file-tree';
 
 export function GoogleDriveUpload(): JSX.Element {
   const { googleDriveSelectedFiles, setGoogleDriveSelectedFiles } = useContext(ApplicationContext);

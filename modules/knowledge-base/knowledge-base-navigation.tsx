@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { TABLER_ICON } from '@/constants/tabler';
 import { IconBrain, IconUpload } from '@tabler/icons-react';
-import { ChangeEvent, KeyboardEvent, useContext, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useContext, useState } from 'react';
 import { INITIAL_APPLICATION_CONTEXT_DATA } from '../constants/main';
 import { ApplicationContext } from '../contexts/application-context';
 import { GoogleDriveUpload } from '../google-drive-upload';

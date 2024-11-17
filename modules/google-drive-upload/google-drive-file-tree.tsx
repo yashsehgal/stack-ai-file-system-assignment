@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
 import { getConnectionUrls, getRootResources } from '@/services/google-drive-setup';
+import { useQuery } from '@tanstack/react-query';
 import { GoogleDriveFileNode } from './google-drive-file-node';
 import { GoogleDriveFileTreeLoading } from './google-drive-file-tree-loading';
 

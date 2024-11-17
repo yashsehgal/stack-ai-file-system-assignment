@@ -1,8 +1,8 @@
 import { IconBrandGoogleDrive } from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { GOOGLE_DRIVE_FILE_TREE_LOADING_SUPPORT_TEXT } from './interfaces/main';
+import { useEffect, useState } from 'react';
 import { GOOGLE_DRIVE_FILE_TREE_LOADING_SUPPORT_TEXT_CONTENT } from './constants/main';
+import { GOOGLE_DRIVE_FILE_TREE_LOADING_SUPPORT_TEXT } from './interfaces/main';
 
 export function GoogleDriveFileTreeLoading(): JSX.Element {
   const [loadingSupportText, setLoadingSupportText] = useState<GOOGLE_DRIVE_FILE_TREE_LOADING_SUPPORT_TEXT>(

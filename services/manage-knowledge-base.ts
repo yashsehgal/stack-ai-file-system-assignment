@@ -1,6 +1,6 @@
+import { STACK_AI_BACKEND_URL } from '@/constants/main';
 import { AxiosError } from 'axios';
 import { GoogleDriveSession } from './google-drive-setup';
-import { STACK_AI_BACKEND_URL } from '@/constants/main';
 import { CreateKbData, KnowledgeBaseResponse, Resource } from './interfaces';
 
 export async function createKnowledgeBase(connectionId: string, connectionSourceIds: string[]): Promise<string | null> {
