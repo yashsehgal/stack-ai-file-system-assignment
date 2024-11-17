@@ -23,13 +23,13 @@ export function GoogleDriveFileTreeLoading(): JSX.Element {
 
   return (
     <div className="py-12 flex flex-col items-center justify-center gap-2">
-      <IconBrandGoogleDrive size={36} />
+      <IconBrandGoogleDrive size={48} />
       <motion.p
         key={loadingSupportText}
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="text-neutral-500 text-sm font-medium">
+        className="font-medium">
         {GOOGLE_DRIVE_FILE_TREE_LOADING_SUPPORT_TEXT_CONTENT[loadingSupportText]}
       </motion.p>
     </div>
