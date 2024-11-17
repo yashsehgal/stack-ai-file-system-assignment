@@ -1,12 +1,12 @@
+'use server';
 import { STACK_AI_BACKEND_URL } from '@/constants/main';
 import { AxiosError } from 'axios';
-import { GoogleDriveSession } from './google-drive-setup';
+import { getConnection, getOrganizationId, GoogleDriveSession } from './google-drive-setup';
 import { CreateKbData, KnowledgeBaseResponse, Resource } from './interfaces';
 
 export async function createKnowledgeBase(connectionId: string, connectionSourceIds: string[]): Promise<string | null> {
   const createKbUrl = `${STACK_AI_BACKEND_URL}/knowledge_bases`;
 
-  // Create the request data body
   const data: CreateKbData = {
     connection_id: connectionId,
     connection_source_ids: connectionSourceIds,
@@ -25,27 +25,33 @@ export async function createKnowledgeBase(connectionId: string, connectionSource
     },
     org_level_role: null,
     cron_job_id: null,
-  };
-
-  console.log('Pinging:', createKbUrl);
+  } as const;
 
   try {
-    // Send the POST request to create the knowledge base
+    console.log('Creating knowledge base with data:', { connectionId, fileCount: connectionSourceIds.length });
+
+    // Use .post() directly instead of .request()
     const response = await GoogleDriveSession.post(createKbUrl, data);
 
-    // Extract the JSON response
-    const newKbJson: KnowledgeBaseResponse = response.data;
-    console.log('Knowledge Base Created:', newKbJson);
+    if (!response.data) {
+      console.error('No data received from knowledge base creation');
+      return null;
+    }
 
-    // Return the knowledge base ID
+    const newKbJson: KnowledgeBaseResponse = response.data;
+    console.log('Knowledge base created successfully:', newKbJson);
     return newKbJson.knowledge_base_id;
   } catch (error) {
     if (error instanceof AxiosError) {
-      console.error('Error creating knowledge base:', error.response?.data || error.message);
+      console.error('Error creating knowledge base:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
     } else {
       console.error('An unexpected error occurred:', error);
     }
-    return null;
+    throw error;
   }
 }
 
@@ -119,5 +125,48 @@ export async function printKbResources(knowledgeBaseId: string): Promise<void> {
       // Handle unexpected errors
       console.error('An unexpected error occurred:', error);
     }
+  }
+}
+
+export async function handleKnowledgeBaseCreation(selectedFiles: Resource[]): Promise<void> {
+  if (!selectedFiles || selectedFiles.length === 0) {
+    throw new Error('No files selected');
+  }
+
+  // Get only file IDs from selected files (no folders)
+  const fileIds = selectedFiles.filter((file) => file.inode_type === 'file').map((file) => file.resource_id);
+
+  if (fileIds.length === 0) {
+    throw new Error('No valid files selected');
+  }
+
+  try {
+    // Get connection
+    const connection = await getConnection();
+    if (!connection?.connection_id) {
+      throw new Error('Failed to get valid connection');
+    }
+
+    // Get organization ID
+    const orgId = await getOrganizationId();
+    if (!orgId) {
+      throw new Error('Failed to get organization ID');
+    }
+
+    // Create knowledge base
+    const knowledgeBaseId = await createKnowledgeBase(connection.connection_id, fileIds);
+    if (!knowledgeBaseId) {
+      throw new Error('Failed to create knowledge base');
+    }
+
+    console.log('Knowledge base created, starting sync...');
+
+    // Sync knowledge base
+    await syncKnowledgeBase(knowledgeBaseId, orgId);
+
+    console.log('Knowledge base sync initiated');
+  } catch (error) {
+    console.error('Error in knowledge base creation:', error);
+    throw error instanceof Error ? error : new Error('Failed to create knowledge base');
   }
 }

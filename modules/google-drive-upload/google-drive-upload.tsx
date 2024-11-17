@@ -1,13 +1,36 @@
+'use client';
 import { Button } from '@/components/ui/button';
 import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { motion } from 'framer-motion';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { INITIAL_APPLICATION_CONTEXT_DATA } from '../constants/main';
 import { ApplicationContext } from '../contexts/application-context';
 import { GoogleDriveFileTree } from './google-drive-file-tree';
+import { getConnection, getOrganizationId } from '@/services/google-drive-setup';
+import { handleKnowledgeBaseCreation } from '@/services/manage-knowledge-base';
 
 export function GoogleDriveUpload(): JSX.Element {
   const { googleDriveSelectedFiles, setGoogleDriveSelectedFiles } = useContext(ApplicationContext);
+  const [isUploading, setIsUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleUpload = async () => {
+    if (!googleDriveSelectedFiles.length) {
+      setError('Please select files to upload');
+      return;
+    }
+
+    setIsUploading(true);
+    setError(null);
+
+    try {
+      await handleKnowledgeBaseCreation(googleDriveSelectedFiles);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Upload failed');
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const handleDeselectAll = (): void => {
     setGoogleDriveSelectedFiles(INITIAL_APPLICATION_CONTEXT_DATA.googleDriveSelectedFiles);
@@ -44,7 +67,7 @@ export function GoogleDriveUpload(): JSX.Element {
           )}
           {SHOW_PRIMARY_ACTIONS && (
             <motion.div key="upload-all-action" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-              <Button size="sm" className="shrink-0">
+              <Button size="sm" className="shrink-0" onClick={handleUpload}>
                 Upload {googleDriveSelectedFiles.length} {googleDriveSelectedFiles.length === 1 ? 'file' : 'files'}
               </Button>
             </motion.div>
