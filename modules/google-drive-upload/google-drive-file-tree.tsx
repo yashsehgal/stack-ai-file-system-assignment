@@ -1,9 +1,7 @@
-import { useContext } from 'react';
-import { ApplicationContext } from '../contexts/application-context';
 import { useQuery } from '@tanstack/react-query';
 import { getConnectionUrls, getRootResources } from '@/services/google-drive-setup';
-import { IconLoader2 } from '@tabler/icons-react';
 import { GoogleDriveFileNode } from './google-drive-file-node';
+import { GoogleDriveFileTreeLoading } from './google-drive-file-tree-loading';
 
 export function GoogleDriveFileTree(): JSX.Element {
   const {
@@ -26,12 +24,7 @@ export function GoogleDriveFileTree(): JSX.Element {
   });
 
   if (isLoading || urlsLoading) {
-    return (
-      <div className="flex items-center gap-2 p-4">
-        <IconLoader2 size={16} className="animate-spin" />
-        <span>Loading file structure...</span>
-      </div>
-    );
+    return <GoogleDriveFileTreeLoading />;
   }
 
   if (isError || urlsError) {
@@ -43,7 +36,7 @@ export function GoogleDriveFileTree(): JSX.Element {
   }
 
   return (
-    <div className="border rounded-lg">
+    <div className=" max-h-[400px] overflow-y-scroll">
       {rootResources.map((resource) => (
         <GoogleDriveFileNode key={`root-${resource.resource_id}`} resource={resource} connectionUrls={urls} />
       ))}

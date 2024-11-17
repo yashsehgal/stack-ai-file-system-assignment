@@ -1,17 +1,14 @@
 import { TABLER_ICON } from '@/constants/tabler';
+import { cn } from '@/lib/utils';
 import { fetchFolderContents } from '@/services/google-drive-setup';
 import { Resource } from '@/services/interfaces';
-import { IconChevronDown, IconChevronRight, IconFile, IconFolder, IconLoader2 } from '@tabler/icons-react';
+import { IconChevronRight, IconFile, IconFolder, IconLoader2 } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { GoogleDriveFileNodeProps } from './interfaces/main';
+import { GoogleDriveFileNodeLoading } from './google-drive-file-node-loading';
 
-export interface GoogleDriveFileNodeProps {
-  resource: Resource;
-  level?: number;
-  connectionUrls: { connectionResourcesUrl: string; childrenResourcesUrl: string } | undefined;
-}
-
-export function GoogleDriveFileNode({ resource, level = 0, connectionUrls }: GoogleDriveFileNodeProps): JSX.Element {
+export function GoogleDriveFileNode({ resource, level = 1, connectionUrls }: GoogleDriveFileNodeProps): JSX.Element {
   const [isNodeOpen, setIsNodeOpen] = useState<boolean>(false);
 
   const {
@@ -38,13 +35,13 @@ export function GoogleDriveFileNode({ resource, level = 0, connectionUrls }: Goo
   return (
     <div>
       <div
-        className="flex items-center p-2 hover:bg-gray-100 cursor-pointer"
+        className="flex items-center p-2 hover:bg-gray-100 cursor-pointer select-none"
         style={{ paddingLeft: `${NODE_INDENTATION}px` }}
         onClick={() => IS_FOLDER && setIsNodeOpen(!isNodeOpen)}>
         <div className="flex items-center gap-2">
           {IS_FOLDER ? (
             <>
-              {isNodeOpen ? <IconChevronDown size={TABLER_ICON.SIZE} /> : <IconChevronRight size={TABLER_ICON.SIZE} />}
+              <IconChevronRight size={TABLER_ICON.SIZE} className={cn('transition-all', isNodeOpen ? 'rotate-90' : '')} />
               <IconFolder size={TABLER_ICON.SIZE} />
             </>
           ) : (
@@ -52,21 +49,13 @@ export function GoogleDriveFileNode({ resource, level = 0, connectionUrls }: Goo
               <IconFile size={TABLER_ICON.SIZE} />
             </div>
           )}
-          <span className="ml-2">{NODE_NAME}</span>
+          <span className="ml-2 text-sm">{NODE_NAME}</span>
         </div>
       </div>
 
       {isNodeOpen && IS_FOLDER && (
         <div key={`children-${resource.resource_id}`}>
-          {isLoading && (
-            <div
-              key={`loading-${resource.resource_id}`}
-              className="flex items-center gap-2 pl-8"
-              style={{ paddingLeft: `${NODE_INDENTATION + 40}px` }}>
-              <IconLoader2 size={16} className="animate-spin" />
-              <span>Loading...</span>
-            </div>
-          )}
+          {isLoading && <GoogleDriveFileNodeLoading level={level} />}
 
           {isError && (
             <div key={`error-${resource.resource_id}`} className="text-red-500 pl-8" style={{ paddingLeft: `${NODE_INDENTATION + 40}px` }}>
