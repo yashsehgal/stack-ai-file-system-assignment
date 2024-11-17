@@ -1,15 +1,17 @@
 'use client';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { IconBrandGoogleDrive, IconBrandNotion, IconDatabase, IconFile, IconFileSpreadsheet, IconPresentation } from '@tabler/icons-react';
-import { KNOWLEDGE_BASE_EMPTY_STATE_DOCUMENTATION_URL } from './constants/main';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { GoogleDriveUpload } from '../google-drive-upload';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { ApplicationContext } from '../contexts/application-context';
+import { GoogleDriveUpload } from '../google-drive-upload';
+import { KNOWLEDGE_BASE_EMPTY_STATE_DOCUMENTATION_URL } from './constants/main';
 
 export function KnowledgeBaseEmptyState({ className, ...props }: Omit<React.HTMLAttributes<HTMLDivElement>, 'children'>): JSX.Element {
+  const [googleDriveModal, setGoogleDriveModal] = useState<boolean>(false);
   const { resetSelectedFiles } = useContext(ApplicationContext);
+
   return (
     <section className={cn('KnowledgeBaseEmptyState-container flex items-center justify-center select-none', className)} {...props}>
       <div className="KnowledgeBaseEmptyState-content-wrapper w-[420px] flex flex-col items-start gap-4">
@@ -31,12 +33,17 @@ export function KnowledgeBaseEmptyState({ className, ...props }: Omit<React.HTML
           </p>
         </div>
         <div className="flex items-center gap-2 mt-2">
-          <Dialog onOpenChange={resetSelectedFiles}>
+          <Dialog
+            open={googleDriveModal}
+            onOpenChange={(checked) => {
+              resetSelectedFiles();
+              setGoogleDriveModal(checked);
+            }}>
             <DialogTrigger asChild>
               <Button leftIcon={IconBrandGoogleDrive}>Upload using Google Drive</Button>
             </DialogTrigger>
             <DialogContent>
-              <GoogleDriveUpload />
+              <GoogleDriveUpload closeModal={() => setGoogleDriveModal(false)} />
             </DialogContent>
           </Dialog>
           <Button variant="ghost" onClick={() => window.open(KNOWLEDGE_BASE_EMPTY_STATE_DOCUMENTATION_URL)}>

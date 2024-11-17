@@ -1,3 +1,4 @@
+// Constant styles for tabler icons
 export const TABLER_ICON = {
   SIZE: 14,
   SIZE_SMALL: 12,

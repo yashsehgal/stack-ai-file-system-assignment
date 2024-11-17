@@ -1,5 +1,6 @@
 import { ApplicationContextType } from '../interfaces/application-context-type';
 
+// Initial store for filling, resetting ApplicationContext
 export const INITIAL_APPLICATION_CONTEXT_DATA: ApplicationContextType = {
   knowledgeBaseTitle: 'Untitled',
   setKnowledgeBaseTitle: () => {

@@ -10,15 +10,20 @@ import { ApplicationContext } from '../contexts/application-context';
 import { GoogleDriveUpload } from '../google-drive-upload';
 
 export function KnowledgeBaseNavigation(): JSX.Element {
+  const [googleDriveModal, setGoogleDriveModal] = useState<boolean>(false);
   const { knowledgeBaseTitle, setKnowledgeBaseTitle, resetSelectedFiles } = useContext(ApplicationContext);
   const [knowledgeBaseTitleInput, setKnowledgeBaseTitleInput] = useState<string>(
     knowledgeBaseTitle || INITIAL_APPLICATION_CONTEXT_DATA.knowledgeBaseTitle,
   );
 
+  // Simple method for handling the changes in knowledge-base title input
   const handleKnowledgeBaseTitleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setKnowledgeBaseTitleInput(e.target.value as string);
   };
 
+  /**
+   * Method to handle the knowledge-base title update: When user enters and changes the content inside
+   */
   const handleUpdateKnowledgeBaseTitle = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key !== 'Enter') return;
 
@@ -27,8 +32,9 @@ export function KnowledgeBaseNavigation(): JSX.Element {
       return;
     }
 
+    // Updating the value of knowledge-base title
     setKnowledgeBaseTitle(knowledgeBaseTitleInput);
-
+    // Making the input blur after the knowledge-base title is renamed
     e.currentTarget.blur();
   };
 
@@ -48,14 +54,19 @@ export function KnowledgeBaseNavigation(): JSX.Element {
         <Button variant="secondary" size="sm">
           Share
         </Button>
-        <Dialog onOpenChange={resetSelectedFiles}>
+        <Dialog
+          open={googleDriveModal}
+          onOpenChange={(checked) => {
+            resetSelectedFiles();
+            setGoogleDriveModal(checked);
+          }}>
           <DialogTrigger asChild>
             <Button size="sm" leftIcon={IconUpload}>
               Upload files
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <GoogleDriveUpload />
+            <GoogleDriveUpload closeModal={() => setGoogleDriveModal(false)} />
           </DialogContent>
         </Dialog>
       </div>

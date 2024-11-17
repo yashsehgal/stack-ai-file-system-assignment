@@ -26,7 +26,5 @@ export function ApplicationContextProvider({ children }: { children: React.React
     resetSelectedFiles,
   } as const;
 
-  useEffect(() => console.log('selected files', googleDriveSelectedFiles), [googleDriveSelectedFiles]);
-
   return <ApplicationContext.Provider value={ProviderData}>{children}</ApplicationContext.Provider>;
 }
