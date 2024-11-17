@@ -13,4 +13,5 @@ export const INITIAL_APPLICATION_CONTEXT_DATA: ApplicationContextType = {
   setGoogleDriveFolderContents: () => {
     throw new Error('[setGoogleDriveFolderContents]: This error has occured while setting up the ApplicationContext initial state');
   },
+  resetSelectedFiles: () => undefined,
 } as const;
