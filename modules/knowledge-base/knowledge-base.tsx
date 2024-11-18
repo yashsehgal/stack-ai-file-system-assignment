@@ -13,6 +13,7 @@ export function KnowledgeBase(): JSX.Element {
   return (
     <div className="KnowledgeBase-container grid">
       <KnowledgeBaseNavigation />
+      {/* Conditionally rendering the knowledge base content. If not available, rendering empty state view */}
       {SHOW_KNOWLEDGE_BASE_CONTENT ? <KnowledgeBaseContent /> : <KnowledgeBaseEmptyState className="py-56" />}
     </div>
   );

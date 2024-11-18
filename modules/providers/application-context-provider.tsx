@@ -1,11 +1,11 @@
 'use client';
 import { Resource } from '@/services/interfaces';
+import { fetchKnowledgeBaseResources } from '@/services/manage-knowledge-base';
 import { useCallback, useEffect, useState } from 'react';
 import { INITIAL_APPLICATION_CONTEXT_DATA } from '../constants/main';
 import { ApplicationContext } from '../contexts/application-context';
 import { ApplicationContextType } from '../interfaces/application-context-type';
 import { KNOWLEDGE_BASE_CONTENT_VIEW } from '../knowledge-base/interfaces/main';
-import { fetchKnowledgeBaseResources } from '@/services/manage-knowledge-base';
 
 export function ApplicationContextProvider({ children }: { children: React.ReactNode }): JSX.Element {
   const [knowledgeBaseTitle, setKnowledgeBaseTitle] = useState<string>(INITIAL_APPLICATION_CONTEXT_DATA.knowledgeBaseTitle);
@@ -20,10 +20,12 @@ export function ApplicationContextProvider({ children }: { children: React.React
   const [knowledgeBaseData, setKnowledgeBaseData] = useState<Resource[]>(INITIAL_APPLICATION_CONTEXT_DATA.knowledgeBaseData);
   const [searchQuery, setSearchQuery] = useState<string>(INITIAL_APPLICATION_CONTEXT_DATA.searchQuery);
 
+  // Pre-built method to deselect all the selected files inside google drive upload flow
   const resetSelectedFiles = () => {
     setGoogleDriveSelectedFiles(INITIAL_APPLICATION_CONTEXT_DATA.googleDriveSelectedFiles);
   };
 
+  // Pre-built method to run a sync cycle for update the knowledge base present in context
   const syncKnowledgeBase = async () => {
     const response = await fetchKnowledgeBaseResources(knowledgeBaseID);
     if (typeof response !== 'undefined' && !!response.length) {
@@ -31,7 +33,8 @@ export function ApplicationContextProvider({ children }: { children: React.React
     }
   };
 
-  const updateKnowledgeBaseWithChildren = useCallback((path: string, children: Resource[]) => {
+  // Pre-built method for updating the knowldge base with children nodes on every recursive content fetch
+  const updateKnowledgeBaseWithChildren = useCallback((_path: string, children: Resource[]) => {
     setKnowledgeBaseData((prevData) => {
       const newData = [...prevData];
 
@@ -49,6 +52,7 @@ export function ApplicationContextProvider({ children }: { children: React.React
     });
   }, []);
 
+  // Pre-built method for handling the removal of files and folders in a nested manner
   const removeKnowledgeBaseResources = useCallback((resourceId: string) => {
     setKnowledgeBaseData((prevData) => {
       const resourceToRemove = prevData.find((r) => r.resource_id === resourceId);
@@ -74,6 +78,7 @@ export function ApplicationContextProvider({ children }: { children: React.React
     });
   }, []);
 
+  // Side-effect for syncing the knowledge base as soon as it is created and knowldge base ID is available
   useEffect(() => {
     if (typeof knowledgeBaseID !== 'undefined' && !!knowledgeBaseID) {
       syncKnowledgeBase();
@@ -82,6 +87,12 @@ export function ApplicationContextProvider({ children }: { children: React.React
 
   useEffect(() => console.log('Knowledge base data', knowledgeBaseData), [knowledgeBaseData]);
 
+  // Side-effect to reset the search filtered files on content view switch for better UX
+  useEffect(() => {
+    setSearchQuery('');
+  }, [knowledgeBaseContentView]);
+
+  // Combing all the contextual data for easy usage
   const ProviderData: ApplicationContextType = {
     knowledgeBaseTitle,
     setKnowledgeBaseTitle,

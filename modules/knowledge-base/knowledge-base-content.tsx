@@ -11,9 +11,11 @@ import { KnowledgeBaseListView } from './knowledge-base-list-view';
 export function KnowledgeBaseContent(): JSX.Element {
   const { knowledgeBaseContentView, setKnowledgeBaseContentView, searchQuery, setSearchQuery } = useContext(ApplicationContext);
 
+  // Preset conditions for checks and conditional rendering
   const HAS_LIST_VIEW: boolean = knowledgeBaseContentView === (KNOWLEDGE_BASE_CONTENT_VIEW.LIST as const);
   const HAS_GRID_VIEW: boolean = knowledgeBaseContentView === (KNOWLEDGE_BASE_CONTENT_VIEW.GRID as const);
 
+  // Handler method to update the searchQuery inside context, used for filtering files
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value as string);
   };
@@ -47,7 +49,7 @@ export function KnowledgeBaseContent(): JSX.Element {
           />
         </div>
       </header>
-      <div className="KnowledgeBaseContent-dataList-container">
+      <div className="KnowledgeBaseContent-dataList-container py-4">
         {HAS_LIST_VIEW && <KnowledgeBaseListView />}
         {HAS_GRID_VIEW && <KnowledgeBaseGridView />}
       </div>

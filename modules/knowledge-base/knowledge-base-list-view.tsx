@@ -8,6 +8,7 @@ import { fetchKnowledgeBaseChildren } from '@/services/manage-knowledge-base';
 export function KnowledgeBaseListView(): JSX.Element {
   const { knowledgeBaseID, knowledgeBaseData, searchQuery } = useContext(ApplicationContext);
 
+  // React-query block for fetching the root node data of knowledge base
   const {
     data: rootResources,
     isLoading,
@@ -22,6 +23,7 @@ export function KnowledgeBaseListView(): JSX.Element {
     enabled: !!knowledgeBaseID,
   });
 
+  // Handler method to filtering of root level files and folders
   const filteredRootResources = useMemo(() => {
     if (!rootResources) return [];
     if (!searchQuery) return rootResources;

@@ -21,9 +21,7 @@ export function KnowledgeBaseNavigation(): JSX.Element {
     setKnowledgeBaseTitleInput(e.target.value as string);
   };
 
-  /**
-   * Method to handle the knowledge-base title update: When user enters and changes the content inside
-   */
+  // Method to handle the knowledge-base title update: When user enters and changes the content inside
   const handleUpdateKnowledgeBaseTitle = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key !== 'Enter') return;
 

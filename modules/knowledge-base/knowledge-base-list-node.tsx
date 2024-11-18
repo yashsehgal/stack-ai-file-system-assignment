@@ -80,7 +80,9 @@ export function KnowledgeBaseListNode({ resource, level = 1 }: KnowledgeBaseList
     return name.includes(lowerQuery);
   }, [resource, searchQuery, filteredChildren]);
 
+  // Preset condition for checking for folders
   const IS_FOLDER = resource.inode_type === 'directory';
+  // Present value before rendering the node name (folder or file name)
   const NODE_NAME = resource.inode_path.path.split('/').pop() ?? 'Unnamed';
 
   // Now we can do the conditional render after all hooks

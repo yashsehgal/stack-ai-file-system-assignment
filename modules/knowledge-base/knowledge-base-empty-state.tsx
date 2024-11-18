@@ -9,8 +9,9 @@ import { GoogleDriveUpload } from '../google-drive-upload';
 import { KNOWLEDGE_BASE_EMPTY_STATE_DOCUMENTATION_URL } from './constants/main';
 
 export function KnowledgeBaseEmptyState({ className, ...props }: Omit<React.HTMLAttributes<HTMLDivElement>, 'children'>): JSX.Element {
-  const [googleDriveModal, setGoogleDriveModal] = useState<boolean>(false);
   const { resetSelectedFiles } = useContext(ApplicationContext);
+  // State to handle to open/close state of google drive modal
+  const [googleDriveModal, setGoogleDriveModal] = useState<boolean>(false);
 
   return (
     <section className={cn('KnowledgeBaseEmptyState-container flex items-center justify-center select-none', className)} {...props}>

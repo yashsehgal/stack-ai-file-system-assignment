@@ -43,10 +43,13 @@ export function GoogleDriveUpload({ closeModal }: { closeModal: () => void }): J
     }
   };
 
+  // Handler+supporting method for deselecting all the selected files in google drive flow
   const handleDeselectAll = (): void => {
     setGoogleDriveSelectedFiles(INITIAL_APPLICATION_CONTEXT_DATA.googleDriveSelectedFiles);
   };
 
+  // Preset condition for storing the state for showing primary actions
+  // Should only show primary actions when google drive files are selected
   const SHOW_PRIMARY_ACTIONS: boolean = googleDriveSelectedFiles.length > 0;
 
   return (
