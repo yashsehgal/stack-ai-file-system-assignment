@@ -9,6 +9,9 @@ import { KnowledgeBaseListNodeProps } from './interfaces/main';
 import { fetchKnowledgeBaseChildren } from '@/services/manage-knowledge-base';
 import { getSpecificFile } from '@/services/google-drive-setup';
 import { ApplicationContext } from '../contexts/application-context';
+import { KnowledgeBaseListNodeLoading } from './knowledge-base-list-node-loading';
+import { Skeleton } from '@/components/ui/skeleton';
+import { KnowledgeBaseListNodeErrorState } from './knowledge-base-list-node-error-state';
 
 export function KnowledgeBaseListNode({ resource, level = 1 }: KnowledgeBaseListNodeProps): JSX.Element | null {
   const [isNodeOpen, setIsNodeOpen] = useState<boolean>(false);
@@ -23,8 +26,8 @@ export function KnowledgeBaseListNode({ resource, level = 1 }: KnowledgeBaseList
 
   const {
     data: children,
-    isLoading,
-    isError,
+    isLoading: isKnowledgeBaseFileNodeLoading,
+    isError: isKnowledgeBaseFileNodeFailed,
   } = useQuery({
     queryKey: ['knowledge-base-children', resource.inode_path.path, knowledgeBaseID],
     queryFn: async () => {
@@ -94,7 +97,7 @@ export function KnowledgeBaseListNode({ resource, level = 1 }: KnowledgeBaseList
     <div>
       <div
         className={cn('flex items-center justify-between p-2 hover:bg-gray-100 cursor-pointer select-none pr-6')}
-        style={{ paddingLeft: `${level * 20}px` }}>
+        style={{ paddingLeft: `${level * 10}px` }}>
         <div className="flex items-center gap-2 flex-1" onClick={() => IS_FOLDER && setIsNodeOpen(!isNodeOpen)}>
           {IS_FOLDER ? (
             <>
@@ -119,14 +122,10 @@ export function KnowledgeBaseListNode({ resource, level = 1 }: KnowledgeBaseList
 
       {isNodeOpen && IS_FOLDER && (
         <div>
-          {isLoading && (
-            <div className="pl-8" style={{ paddingLeft: `${level * 20 + 40}px` }}>
-              Loading...
-            </div>
-          )}
-          {isError && (
-            <div className="text-red-500 pl-8" style={{ paddingLeft: `${level * 20 + 40}px` }}>
-              Error loading contents
+          {isKnowledgeBaseFileNodeLoading && <KnowledgeBaseListNodeLoading level={level} />}
+          {isKnowledgeBaseFileNodeFailed && (
+            <div className="pr-6" style={{ paddingLeft: `${level * 20 + 40}px` }}>
+              <KnowledgeBaseListNodeErrorState />
             </div>
           )}
           {filteredChildren.map((child: Resource) => (

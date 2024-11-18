@@ -2,6 +2,8 @@ import { getConnectionUrls, getRootResources } from '@/services/google-drive-set
 import { useQuery } from '@tanstack/react-query';
 import { GoogleDriveFileNode } from './google-drive-file-node';
 import { GoogleDriveFileTreeLoading } from './google-drive-file-tree-loading';
+import { GoogleDriveFileTreeErrorState } from './google-drive-file-tree-error-state';
+import { GoogleDriveFileTreeEmptyState } from './google-drive-empty-state';
 
 export function GoogleDriveFileTree(): JSX.Element {
   const {
@@ -15,7 +17,7 @@ export function GoogleDriveFileTree(): JSX.Element {
 
   const {
     data: rootResources,
-    isLoading,
+    isLoading: isGoogleDriveResourceLoading,
     isError,
   } = useQuery({
     queryKey: ['fetch-root-resources'],
@@ -23,16 +25,16 @@ export function GoogleDriveFileTree(): JSX.Element {
     enabled: !!urls, // Only fetch root resources after we have the URLs
   });
 
-  if (isLoading || urlsLoading) {
+  if (isGoogleDriveResourceLoading || urlsLoading) {
     return <GoogleDriveFileTreeLoading />;
   }
 
   if (isError || urlsError) {
-    return <div className="text-red-500 p-4">Error loading file structure. Please try again later.</div>;
+    return <GoogleDriveFileTreeErrorState />;
   }
 
   if (!rootResources) {
-    return <div className="p-4">No files found</div>;
+    return <GoogleDriveFileTreeEmptyState />;
   }
 
   return (

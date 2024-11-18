@@ -1,18 +1,18 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
 import { handleKnowledgeBaseCreation } from '@/services/manage-knowledge-base';
 import { motion } from 'framer-motion';
 import { useContext, useState } from 'react';
 import { INITIAL_APPLICATION_CONTEXT_DATA } from '../constants/main';
 import { ApplicationContext } from '../contexts/application-context';
 import { GoogleDriveFileTree } from './google-drive-file-tree';
-import { useToast } from '@/hooks/use-toast';
 
 export function GoogleDriveUpload({ closeModal }: { closeModal: () => void }): JSX.Element {
   const { googleDriveSelectedFiles, setGoogleDriveSelectedFiles, setKnowledgeBaseID } = useContext(ApplicationContext);
   const [isUploading, setIsUploading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [_, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const handleUpload = async () => {

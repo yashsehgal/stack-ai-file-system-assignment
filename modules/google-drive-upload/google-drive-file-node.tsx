@@ -9,6 +9,7 @@ import { useCallback, useContext, useState } from 'react';
 import { ApplicationContext } from '../contexts/application-context';
 import { GoogleDriveFileNodeLoading } from './google-drive-file-node-loading';
 import { GoogleDriveFileNodeProps } from './interfaces/main';
+import { GoogleDriveFileNodeErrorState } from './google-drive-file-node-error-state';
 
 export function GoogleDriveFileNode({ resource, level = 1, connectionUrls }: GoogleDriveFileNodeProps): JSX.Element {
   const { googleDriveSelectedFiles, setGoogleDriveSelectedFiles } = useContext(ApplicationContext);
@@ -81,7 +82,7 @@ export function GoogleDriveFileNode({ resource, level = 1, connectionUrls }: Goo
           {isLoading && <GoogleDriveFileNodeLoading level={level} />}
           {isError && (
             <div className="text-red-500 pl-8" style={{ paddingLeft: `${level * 20 + 40}px` }}>
-              Error loading folder contents
+              <GoogleDriveFileNodeErrorState />
             </div>
           )}
           {children?.map((child: Resource) => (

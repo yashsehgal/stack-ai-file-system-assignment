@@ -4,6 +4,9 @@ import { ApplicationContext } from '../contexts/application-context';
 import { getConnectionUrls } from '@/services/google-drive-setup';
 import { useQuery } from '@tanstack/react-query';
 import { fetchKnowledgeBaseChildren } from '@/services/manage-knowledge-base';
+import { KnowledgeBaseListViewLoading } from './knowledge-base-list-view-loading';
+import { KnowledgeBaseListViewErrorState } from './knowledge-base-list-view-error-state';
+import { KnowledgeBaseEmptyState } from './knowledge-base-empty-state';
 
 export function KnowledgeBaseListView(): JSX.Element {
   const { knowledgeBaseID, knowledgeBaseData, searchQuery } = useContext(ApplicationContext);
@@ -11,8 +14,8 @@ export function KnowledgeBaseListView(): JSX.Element {
   // React-query block for fetching the root node data of knowledge base
   const {
     data: rootResources,
-    isLoading,
-    isError,
+    isLoading: isKnowledgeBaseListLoading,
+    isError: isKnowledgeBaseListFailed,
   } = useQuery({
     queryKey: ['knowledge-base-root', knowledgeBaseID],
     queryFn: async () => {
@@ -43,11 +46,11 @@ export function KnowledgeBaseListView(): JSX.Element {
 
   // Show empty state if no data
   if (knowledgeBaseData.length === 0) {
-    return <div>No files or folders found</div>;
+    return <KnowledgeBaseEmptyState />;
   }
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading knowledge base</div>;
+  if (isKnowledgeBaseListLoading) return <KnowledgeBaseListViewLoading />;
+  if (isKnowledgeBaseListFailed) return <KnowledgeBaseListViewErrorState />;
 
   return (
     <div className="KnowledgeBaseListView-container">
