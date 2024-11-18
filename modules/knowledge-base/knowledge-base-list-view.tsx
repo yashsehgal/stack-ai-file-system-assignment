@@ -1,7 +1,6 @@
 import { useContext, useMemo } from 'react';
 import { KnowledgeBaseListNode } from './knowledge-base-list-node';
 import { ApplicationContext } from '../contexts/application-context';
-import { getConnectionUrls } from '@/services/google-drive-setup';
 import { useQuery } from '@tanstack/react-query';
 import { fetchKnowledgeBaseChildren } from '@/services/manage-knowledge-base';
 import { KnowledgeBaseListViewLoading } from './knowledge-base-list-view-loading';

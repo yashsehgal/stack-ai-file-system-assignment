@@ -83,6 +83,7 @@ export function ApplicationContextProvider({ children }: { children: React.React
     if (typeof knowledgeBaseID !== 'undefined' && !!knowledgeBaseID) {
       syncKnowledgeBase();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [knowledgeBaseID]);
 
   useEffect(() => console.log('Knowledge base data', knowledgeBaseData), [knowledgeBaseData]);

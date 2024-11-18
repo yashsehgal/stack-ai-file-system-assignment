@@ -7,10 +7,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { KnowledgeBaseListNodeProps } from './interfaces/main';
 import { fetchKnowledgeBaseChildren } from '@/services/manage-knowledge-base';
-import { getSpecificFile } from '@/services/google-drive-setup';
 import { ApplicationContext } from '../contexts/application-context';
 import { KnowledgeBaseListNodeLoading } from './knowledge-base-list-node-loading';
-import { Skeleton } from '@/components/ui/skeleton';
 import { KnowledgeBaseListNodeErrorState } from './knowledge-base-list-node-error-state';
 
 export function KnowledgeBaseListNode({ resource, level = 1 }: KnowledgeBaseListNodeProps): JSX.Element | null {

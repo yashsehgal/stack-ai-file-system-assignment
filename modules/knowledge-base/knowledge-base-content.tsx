@@ -20,24 +20,30 @@ export function KnowledgeBaseContent(): JSX.Element {
     setSearchQuery(e.target.value as string);
   };
 
+  const SHOW_CONTENT_VIEW_OPTIONS: boolean = false as const;
+
   return (
     <div className="KnowledgeBaseContent-container">
       <header className="KnowledgeBaseContent-header flex items-center justify-between p-2 border-b">
         <div className="KnowledgeBaseContent-contentView-options-container flex items-center justify-end gap-1.5">
-          <Button
-            size="sm"
-            leftIcon={HAS_LIST_VIEW ? IconLayoutListFilled : IconLayoutList}
-            variant={HAS_LIST_VIEW ? 'default' : 'ghost'}
-            onClick={() => setKnowledgeBaseContentView(KNOWLEDGE_BASE_CONTENT_VIEW.LIST)}>
-            List
-          </Button>
-          <Button
-            size="sm"
-            leftIcon={HAS_GRID_VIEW ? IconLayout2Filled : IconLayout2}
-            variant={HAS_GRID_VIEW ? 'default' : 'ghost'}
-            onClick={() => setKnowledgeBaseContentView(KNOWLEDGE_BASE_CONTENT_VIEW.GRID)}>
-            Grid
-          </Button>
+          {SHOW_CONTENT_VIEW_OPTIONS && (
+            <>
+              <Button
+                size="sm"
+                leftIcon={HAS_LIST_VIEW ? IconLayoutListFilled : IconLayoutList}
+                variant={HAS_LIST_VIEW ? 'default' : 'ghost'}
+                onClick={() => setKnowledgeBaseContentView(KNOWLEDGE_BASE_CONTENT_VIEW.LIST)}>
+                List
+              </Button>
+              <Button
+                size="sm"
+                leftIcon={HAS_GRID_VIEW ? IconLayout2Filled : IconLayout2}
+                variant={HAS_GRID_VIEW ? 'default' : 'ghost'}
+                onClick={() => setKnowledgeBaseContentView(KNOWLEDGE_BASE_CONTENT_VIEW.GRID)}>
+                Grid
+              </Button>
+            </>
+          )}
         </div>
         <div className="KnowledgeBaseContent-searchOptions-container">
           <Input

@@ -49,9 +49,6 @@ export function KnowledgeBaseNavigation(): JSX.Element {
         />
       </div>
       <div className="NavigationOptions-container flex items-center justify-end gap-1.5">
-        <Button variant="secondary" size="sm">
-          Share
-        </Button>
         <Dialog
           open={googleDriveModal}
           onOpenChange={(checked) => {
