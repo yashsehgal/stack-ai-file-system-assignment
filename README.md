@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Knowledge base setup via Google Drive
 
-## Getting Started
+**Quick actions**
 
-First, run the development server:
+- [See the usable deployment](https://stack-ai-file-system-assignment.vercel.app/)
+- [See the demo video and code walkthrough]()
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This project contains code for my Stack AI Frontend Engineer Assignment. The task was to create a live-synced knowledge base system with Stack AI using Google Drive for file and document uploads.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**The project user experience and flow can be tested by the following steps:**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Click on upload > A google drive file system will open
+- Select files that you want to upload and click on upload. You can also deselect files.
+- Once the upload is done, the knowledge base which is sycned with Stack AI workflow builder will get rendered in the same format, the Google Drive files are uploaded.
+- You can explore and test the following features then:
+  - Filter folders and files using the search input in the header section.
+  - Toggle to List and Grid view for better experience.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Technologies and coding concepts used**
 
-## Learn More
+- NextJS
+- TailwindCSS
+- Typescript
+- Vercel for deployment
+- TanStack React Query for data fetching methods
+- Axios for writing APIs
+- Context API to store the complete applications context as a single source of truth.
 
-To learn more about Next.js, take a look at the following resources:
+**How to setup the project locally**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To setup this project, follow the mentioned steps:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Clone the repository in your local machine.
+- Run the command mentioned below to install all the dependencies and run the project.
+  ```
+  yarn && yarn dev
+  ```
+- Contact for `.env` keys for running Google Drive and Knowledge base modules.
 
-## Deploy on Vercel
+**Coding pattern**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `app` - All the routed pages are present inside.
+- `modules` - All the modules such as **Google Drive** and **Knowledge Base** are present as modules.
+- `components` - Storing all the shared components and shadcn components.
+- `constants` - Shared constants across the project.
+- `services` - All the services related to available modules i.e. **Google Drive Setup** and **Knowledge Base Management**
+- `providers` - All the shared providers are available. This folder convention is also available for **ApplicationContext** inside nested folders.
+- `interfaces` - All the nested folders have their own interfaces, types and enums present relatively inside modules and other components.
+- `contexts` - For storing the contexts related to application.
