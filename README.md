@@ -2,7 +2,7 @@
 
 **Quick actions**
 
-- [See the usable deployment](https://stack-ai-file-system-assignment.vercel.app/)
+- [See the usable vercel deployment](https://stack-ai-file-system-assignment.vercel.app/)
 - [See the demo video and code walkthrough](https://drive.google.com/file/d/1hg5IV8poRG4M3ENngaXHX1nbhrLE_8Xd/view?usp=drive_link)
 
 This project contains code for my Stack AI Frontend Engineer Assignment. The task was to create a live-synced knowledge base system with Stack AI using Google Drive for file and document uploads.
