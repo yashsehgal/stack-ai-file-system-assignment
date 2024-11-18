@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchKnowledgeBaseChildren } from '@/services/manage-knowledge-base';
 
 export function KnowledgeBaseListView(): JSX.Element {
-  const { knowledgeBaseID, knowledgeBaseData } = useContext(ApplicationContext);
+  const { knowledgeBaseID, knowledgeBaseData, searchQuery } = useContext(ApplicationContext);
 
   const {
     data: rootResources,
@@ -22,6 +22,23 @@ export function KnowledgeBaseListView(): JSX.Element {
     enabled: !!knowledgeBaseID,
   });
 
+  const filteredRootResources = useMemo(() => {
+    if (!rootResources) return [];
+    if (!searchQuery) return rootResources;
+
+    const lowerQuery = searchQuery.toLowerCase();
+
+    return rootResources.filter((resource) => {
+      const name = resource.inode_path.path.split('/').pop()?.toLowerCase() || '';
+      // For files, check if name matches search
+      if (resource.inode_type === 'file') {
+        return name.includes(lowerQuery);
+      }
+      // Always keep folders in filtered results as they might contain matching files
+      return true;
+    });
+  }, [rootResources, searchQuery]);
+
   // Show empty state if no data
   if (knowledgeBaseData.length === 0) {
     return <div>No files or folders found</div>;
@@ -32,7 +49,7 @@ export function KnowledgeBaseListView(): JSX.Element {
 
   return (
     <div className="KnowledgeBaseListView-container">
-      {rootResources?.map((resource) => (
+      {filteredRootResources.map((resource) => (
         <KnowledgeBaseListNode key={`root-${resource.resource_id}`} resource={resource} />
       ))}
     </div>

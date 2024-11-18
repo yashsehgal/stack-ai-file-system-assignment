@@ -32,6 +32,10 @@ export type ApplicationContextType = {
   // Method to handle removal of files and folders from knowledge base
   removeKnowledgeBaseResources: (resourceIds: string) => void;
 
+  // State and dispatcher for storing search query
+  searchQuery: string;
+  setSearchQuery: React.Dispatch<SetStateAction<string>>;
+
   // Resetter method for clearing selected files
   resetSelectedFiles: () => void;
 };

@@ -18,6 +18,7 @@ export function ApplicationContextProvider({ children }: { children: React.React
   );
   const [knowledgeBaseID, setKnowledgeBaseID] = useState<string>(INITIAL_APPLICATION_CONTEXT_DATA.knowledgeBaseID);
   const [knowledgeBaseData, setKnowledgeBaseData] = useState<Resource[]>(INITIAL_APPLICATION_CONTEXT_DATA.knowledgeBaseData);
+  const [searchQuery, setSearchQuery] = useState<string>(INITIAL_APPLICATION_CONTEXT_DATA.searchQuery);
 
   const resetSelectedFiles = () => {
     setGoogleDriveSelectedFiles(INITIAL_APPLICATION_CONTEXT_DATA.googleDriveSelectedFiles);
@@ -97,6 +98,8 @@ export function ApplicationContextProvider({ children }: { children: React.React
     updateKnowledgeBaseWithChildren,
     removeKnowledgeBaseResources,
     resetSelectedFiles,
+    searchQuery,
+    setSearchQuery,
   } as const;
 
   return <ApplicationContext.Provider value={ProviderData}>{children}</ApplicationContext.Provider>;

@@ -12,7 +12,7 @@ import { ApplicationContext } from '../contexts/application-context';
 
 export function KnowledgeBaseListNode({ resource, level = 1 }: KnowledgeBaseListNodeProps): JSX.Element | null {
   const [isNodeOpen, setIsNodeOpen] = useState<boolean>(false);
-  const { knowledgeBaseID, removeKnowledgeBaseResources, updateKnowledgeBaseWithChildren, knowledgeBaseData } =
+  const { knowledgeBaseID, removeKnowledgeBaseResources, updateKnowledgeBaseWithChildren, knowledgeBaseData, searchQuery } =
     useContext(ApplicationContext);
 
   // Resource existence check
@@ -53,11 +53,38 @@ export function KnowledgeBaseListNode({ resource, level = 1 }: KnowledgeBaseList
     [resource, removeKnowledgeBaseResources],
   );
 
+  const filteredChildren = useMemo(() => {
+    if (!children) return [];
+    if (!searchQuery) return children;
+
+    const lowerQuery = searchQuery.toLowerCase();
+
+    return children.filter((child) => {
+      const name = child.inode_path.path.split('/').pop()?.toLowerCase() || '';
+      return name.includes(lowerQuery);
+    });
+  }, [children, searchQuery]);
+
+  // Check if current resource matches search
+  const matchesSearch = useMemo(() => {
+    if (!searchQuery) return true;
+
+    const name = resource.inode_path.path.split('/').pop()?.toLowerCase() || '';
+    const lowerQuery = searchQuery.toLowerCase();
+
+    // Always show folders if they have matching children
+    if (resource.inode_type === 'directory' && filteredChildren.length > 0) {
+      return true;
+    }
+
+    return name.includes(lowerQuery);
+  }, [resource, searchQuery, filteredChildren]);
+
   const IS_FOLDER = resource.inode_type === 'directory';
   const NODE_NAME = resource.inode_path.path.split('/').pop() ?? 'Unnamed';
 
   // Now we can do the conditional render after all hooks
-  if (!resourceExists) {
+  if (!resourceExists || !matchesSearch) {
     return null;
   }
 
@@ -100,7 +127,7 @@ export function KnowledgeBaseListNode({ resource, level = 1 }: KnowledgeBaseList
               Error loading contents
             </div>
           )}
-          {children?.map((child: Resource) => (
+          {filteredChildren.map((child: Resource) => (
             <KnowledgeBaseListNode key={`node-${child.resource_id}`} resource={child} level={level + 1} />
           ))}
         </div>

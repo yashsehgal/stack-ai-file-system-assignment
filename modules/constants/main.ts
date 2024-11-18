@@ -33,5 +33,9 @@ export const INITIAL_APPLICATION_CONTEXT_DATA: ApplicationContextType = {
   updateKnowledgeBaseWithChildren: () => {
     throw new Error('[updateKnowledgeBaseWithChildren]: This error has occurred while setting up the ApplicationContext initial state');
   },
+  searchQuery: '',
+  setSearchQuery: () => {
+    throw new Error('[setSearchQuery]: This error has occurred while setting up the ApplicationContext initial state.');
+  },
   resetSelectedFiles: () => undefined,
 } as const;

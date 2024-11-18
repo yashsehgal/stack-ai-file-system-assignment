@@ -9,10 +9,14 @@ import { KnowledgeBaseGridView } from './knowledge-base-grid-view';
 import { KnowledgeBaseListView } from './knowledge-base-list-view';
 
 export function KnowledgeBaseContent(): JSX.Element {
-  const { knowledgeBaseContentView, setKnowledgeBaseContentView } = useContext(ApplicationContext);
+  const { knowledgeBaseContentView, setKnowledgeBaseContentView, searchQuery, setSearchQuery } = useContext(ApplicationContext);
 
   const HAS_LIST_VIEW: boolean = knowledgeBaseContentView === (KNOWLEDGE_BASE_CONTENT_VIEW.LIST as const);
   const HAS_GRID_VIEW: boolean = knowledgeBaseContentView === (KNOWLEDGE_BASE_CONTENT_VIEW.GRID as const);
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value as string);
+  };
 
   return (
     <div className="KnowledgeBaseContent-container">
@@ -34,7 +38,13 @@ export function KnowledgeBaseContent(): JSX.Element {
           </Button>
         </div>
         <div className="KnowledgeBaseContent-searchOptions-container">
-          <Input className="w-[240px]" placeholder="Search for files and folders" />
+          <Input
+            className="w-[240px]"
+            placeholder="Search for files and folders"
+            type="text"
+            value={searchQuery}
+            onChange={handleSearchInputChange}
+          />
         </div>
       </header>
       <div className="KnowledgeBaseContent-dataList-container">
