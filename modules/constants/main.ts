@@ -27,5 +27,11 @@ export const INITIAL_APPLICATION_CONTEXT_DATA: ApplicationContextType = {
   setKnowledgeBaseData: () => {
     throw new Error('[setKnowledgeBaseData]: This error has occured while setting up the ApplicationContext initial state');
   },
+  removeKnowledgeBaseResources: () => {
+    throw new Error('[removeKnowledgeBaseResources]: This error has occurred while setting up the ApplicationContext initial state');
+  },
+  updateKnowledgeBaseWithChildren: () => {
+    throw new Error('[updateKnowledgeBaseWithChildren]: This error has occurred while setting up the ApplicationContext initial state');
+  },
   resetSelectedFiles: () => undefined,
 } as const;

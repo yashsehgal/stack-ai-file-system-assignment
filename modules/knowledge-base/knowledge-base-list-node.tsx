@@ -2,17 +2,24 @@
 import { TABLER_ICON } from '@/constants/tabler';
 import { cn } from '@/lib/utils';
 import { Resource } from '@/services/interfaces';
-import { IconChevronRight, IconFile, IconFolder, IconFolderOpen } from '@tabler/icons-react';
+import { IconChevronRight, IconFile, IconFolder, IconFolderOpen, IconTrash } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { KnowledgeBaseListNodeProps } from './interfaces/main';
 import { fetchKnowledgeBaseChildren } from '@/services/manage-knowledge-base';
 import { getSpecificFile } from '@/services/google-drive-setup';
 import { ApplicationContext } from '../contexts/application-context';
 
-export function KnowledgeBaseListNode({ resource, level = 1 }: KnowledgeBaseListNodeProps): JSX.Element {
+export function KnowledgeBaseListNode({ resource, level = 1 }: KnowledgeBaseListNodeProps): JSX.Element | null {
   const [isNodeOpen, setIsNodeOpen] = useState<boolean>(false);
-  const { knowledgeBaseID } = useContext(ApplicationContext);
+  const { knowledgeBaseID, removeKnowledgeBaseResources, updateKnowledgeBaseWithChildren, knowledgeBaseData } =
+    useContext(ApplicationContext);
+
+  // Resource existence check
+  const resourceExists = useMemo(
+    () => knowledgeBaseData.some((item) => item.resource_id === resource.resource_id),
+    [knowledgeBaseData, resource.resource_id],
+  );
 
   const {
     data: children,
@@ -23,18 +30,36 @@ export function KnowledgeBaseListNode({ resource, level = 1 }: KnowledgeBaseList
     queryFn: async () => {
       if (!knowledgeBaseID) return [];
 
-      // For folders, fetch their contents using the path
       if (resource.inode_type === 'directory') {
         const path = `${resource.inode_path.path}/`;
-        return fetchKnowledgeBaseChildren(knowledgeBaseID, path);
+        const children = await fetchKnowledgeBaseChildren(knowledgeBaseID, path);
+        updateKnowledgeBaseWithChildren(path, children);
+        return children;
       }
       return [];
     },
     enabled: isNodeOpen && resource.inode_type === 'directory' && !!knowledgeBaseID,
   });
 
+  const handleRemove = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (resource.inode_type === 'directory') {
+        const confirmed = window.confirm('Are you sure you want to remove this folder and all its contents?');
+        if (!confirmed) return;
+      }
+      removeKnowledgeBaseResources(resource.resource_id);
+    },
+    [resource, removeKnowledgeBaseResources],
+  );
+
   const IS_FOLDER = resource.inode_type === 'directory';
   const NODE_NAME = resource.inode_path.path.split('/').pop() ?? 'Unnamed';
+
+  // Now we can do the conditional render after all hooks
+  if (!resourceExists) {
+    return null;
+  }
 
   return (
     <div>
@@ -58,6 +83,9 @@ export function KnowledgeBaseListNode({ resource, level = 1 }: KnowledgeBaseList
           )}
           <span className="ml-2 text-sm">{NODE_NAME}</span>
         </div>
+        <button onClick={handleRemove} className="p-1 hover:bg-red-100 rounded-full">
+          <IconTrash size={16} className="text-red-500" />
+        </button>
       </div>
 
       {isNodeOpen && IS_FOLDER && (

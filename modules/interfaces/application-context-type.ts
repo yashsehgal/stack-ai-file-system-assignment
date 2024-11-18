@@ -27,6 +27,11 @@ export type ApplicationContextType = {
   knowledgeBaseData: Resource[];
   setKnowledgeBaseData: React.Dispatch<SetStateAction<Resource[]>>;
 
+  updateKnowledgeBaseWithChildren: (path: string, children: Resource[]) => void;
+
+  // Method to handle removal of files and folders from knowledge base
+  removeKnowledgeBaseResources: (resourceIds: string) => void;
+
   // Resetter method for clearing selected files
   resetSelectedFiles: () => void;
 };
