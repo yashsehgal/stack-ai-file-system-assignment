@@ -13,3 +13,8 @@ export enum KNOWLEDGE_BASE_CONTENT_VIEW {
   LIST = 'LIST',
   GRID = 'GRID',
 }
+
+export interface KnowledgeBaseGridNodeProps {
+  resource: Resource;
+  onNavigate: (path: string) => void;
+}

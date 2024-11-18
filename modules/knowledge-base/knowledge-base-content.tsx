@@ -20,7 +20,7 @@ export function KnowledgeBaseContent(): JSX.Element {
     setSearchQuery(e.target.value as string);
   };
 
-  const SHOW_CONTENT_VIEW_OPTIONS: boolean = false as const;
+  const SHOW_CONTENT_VIEW_OPTIONS: boolean = true as const;
 
   return (
     <div className="KnowledgeBaseContent-container">
