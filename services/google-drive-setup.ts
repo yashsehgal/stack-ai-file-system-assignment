@@ -82,37 +82,41 @@ export async function getConnection() {
 }
 
 export async function getConnectionUrls(): Promise<{ connectionResourcesUrl: string; childrenResourcesUrl: string }> {
-  // Extract connection_id from the connection object
-  const response = await getConnection();
-  const connection_id = response.connection_id;
+  try {
+    const connection = await getConnection();
+    const connection_id = connection.connection_id;
 
-  // Construct the URLs
-  const connectionResourcesUrl = `${STACK_AI_BACKEND_URL}/connections/${connection_id}/resources`;
-  const childrenResourcesUrl = `${STACK_AI_BACKEND_URL}/connections/${connection_id}/resources/children`;
+    // Match exactly with Python URL structure
+    const connectionResourcesUrl = `${STACK_AI_BACKEND_URL}/connections/${connection_id}/resources`;
+    const childrenResourcesUrl = `${STACK_AI_BACKEND_URL}/connections/${connection_id}/resources/children`;
 
-  return {
-    connectionResourcesUrl,
-    childrenResourcesUrl,
-  };
+    // Debug logging
+    console.log('Connection ID: ', connection_id);
+    console.log('Connection resources URL: ', connectionResourcesUrl);
+    console.log('Children resources URL: ', childrenResourcesUrl);
+
+    return {
+      connectionResourcesUrl,
+      childrenResourcesUrl,
+    };
+  } catch (error) {
+    console.error('Error in getConnectionUrls:', error);
+    throw error;
+  }
 }
 
 export async function getRootResources(): Promise<Resource[] | undefined> {
   const { childrenResourcesUrl } = await getConnectionUrls();
 
   try {
-    // Send GET request to fetch the root resources
+    // For root resources, don't include resource_id parameter
     const response = await GoogleDriveSession.get(childrenResourcesUrl);
-
-    // Extract the resources from the response
     const rootResources: Resource[] = response.data;
 
-    // Check if the response is empty
     if (rootResources.length === 0) {
       console.log('No root resources found');
       return;
     }
-
-    console.log('ROOT', rootResources);
 
     return rootResources;
   } catch (error) {
@@ -124,46 +128,54 @@ export async function getRootResources(): Promise<Resource[] | undefined> {
   }
 }
 
-export async function getSpecificFile(resourceId: string, resourcesUrl: string): Promise<void> {
-  // Prepare query parameters
-  const data = { resource_id: resourceId };
-
-  // Encode query parameters using URLSearchParams (similar to urlencode in Python)
-  const encodedQueryParams = new URLSearchParams(data).toString();
-  const url = `${resourcesUrl}?${encodedQueryParams}`;
-
+export async function getSpecificFile(resourceId: string, resourcesUrl: string): Promise<Resource[]> {
   try {
-    // Send the GET request using the GoogleDriveSession
-    const response = await GoogleDriveSession.get(url);
+    // Special case for root directory
+    if (resourceId === 'STACK_VFS_VIRTUAL_DIRECTORY') {
+      // For root directory, don't include resource_id parameter
+      const response = await GoogleDriveSession.get(resourcesUrl);
+      let resources: Resource[] = response.data;
 
-    // Check if the response is empty
-    let resources: Resource[] = response.data;
+      if (!resources) {
+        return [];
+      }
 
-    if (resources.length === 0) {
-      console.log('No resources found');
-      return;
+      if (!Array.isArray(resources)) {
+        resources = [resources];
+      }
+
+      return resources;
     }
 
-    // If response is a dictionary, convert it to an array (handle single resource case)
-    if (resources && !Array.isArray(resources)) {
+    // Normal case for other directories
+    const url = `${resourcesUrl}?resource_id=${resourceId}`;
+    console.log('Fetching from URL: ', url);
+
+    const response = await GoogleDriveSession.get(url);
+    let resources: Resource[] = response.data;
+
+    if (!resources) {
+      return [];
+    }
+
+    if (!Array.isArray(resources)) {
       resources = [resources];
     }
 
-    // Print resources
-    resources.forEach((resource) => {
-      const emoji = resource.inode_type === 'directory' ? '📁' : '📄';
-      console.log(`${emoji} ${resource.inode_path.path.padEnd(30)} (resource_id: ${resource.resource_id})`);
-    });
-
-    // Optionally print raw response for debugging
-    console.log('\n\nRaw response:');
-    console.log(response);
+    return resources;
   } catch (error) {
     if (error instanceof AxiosError) {
-      console.error('Error fetching resources:', error.response?.data || error.message);
-    } else {
-      console.error('An unexpected error occurred:', error);
+      console.error('Error in getSpecificFile:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        url: error.config?.url,
+      });
+      // Return empty array instead of throwing for 404
+      if (error.response?.status === 404) {
+        return [];
+      }
     }
+    throw error;
   }
 }
 

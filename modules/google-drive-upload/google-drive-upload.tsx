@@ -10,7 +10,7 @@ import { GoogleDriveFileTree } from './google-drive-file-tree';
 import { useToast } from '@/hooks/use-toast';
 
 export function GoogleDriveUpload({ closeModal }: { closeModal: () => void }): JSX.Element {
-  const { googleDriveSelectedFiles, setGoogleDriveSelectedFiles } = useContext(ApplicationContext);
+  const { googleDriveSelectedFiles, setGoogleDriveSelectedFiles, setKnowledgeBaseID } = useContext(ApplicationContext);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
@@ -25,7 +25,10 @@ export function GoogleDriveUpload({ closeModal }: { closeModal: () => void }): J
     setError(null);
 
     try {
-      await handleKnowledgeBaseCreation(googleDriveSelectedFiles);
+      const knowledgeBaseID = await handleKnowledgeBaseCreation(googleDriveSelectedFiles);
+      if (typeof knowledgeBaseID !== 'undefined' && !!knowledgeBaseID) {
+        setKnowledgeBaseID(knowledgeBaseID);
+      }
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Upload failed');
     } finally {

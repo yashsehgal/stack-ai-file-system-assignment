@@ -1,7 +1,7 @@
 'use server';
 import { STACK_AI_BACKEND_URL } from '@/constants/main';
 import { AxiosError } from 'axios';
-import { getConnection, getOrganizationId, GoogleDriveSession } from './google-drive-setup';
+import { getConnection, getOrganizationId, getSpecificFile, GoogleDriveSession } from './google-drive-setup';
 import { CreateKbData, KnowledgeBaseResponse, Resource } from './interfaces';
 
 export async function createKnowledgeBase(connectionId: string, connectionSourceIds: string[]): Promise<string | null> {
@@ -79,7 +79,7 @@ export async function syncKnowledgeBase(knowledgeBaseId: string, orgId: string):
   }
 }
 
-export async function printKbResources(knowledgeBaseId: string): Promise<void> {
+export async function fetchKnowledgeBaseResources(knowledgeBaseId: string): Promise<Resource[] | undefined> {
   const kbChildrenResourcesUrl = `${STACK_AI_BACKEND_URL}/knowledge_bases/${knowledgeBaseId}/resources/children`;
 
   const data = {
@@ -110,13 +110,7 @@ export async function printKbResources(knowledgeBaseId: string): Promise<void> {
       resources = [resources];
     }
 
-    // Loop through the resources and print their details
-    resources.forEach((resource) => {
-      const emoji = resource.inode_type === 'directory' ? '📁' : '📄';
-      console.log(
-        `${emoji} ${resource.inode_path.path.padEnd(30)} (resource_id: ${resource.resource_id}) status: ${resource.status || 'N/A'}`,
-      );
-    });
+    return resources;
   } catch (error) {
     if (error instanceof AxiosError) {
       // Handle error if the request fails
@@ -128,7 +122,7 @@ export async function printKbResources(knowledgeBaseId: string): Promise<void> {
   }
 }
 
-export async function handleKnowledgeBaseCreation(selectedFiles: Resource[]): Promise<void> {
+export async function handleKnowledgeBaseCreation(selectedFiles: Resource[]): Promise<string | undefined> {
   if (!selectedFiles || selectedFiles.length === 0) {
     throw new Error('No files selected');
   }
@@ -165,8 +159,34 @@ export async function handleKnowledgeBaseCreation(selectedFiles: Resource[]): Pr
     await syncKnowledgeBase(knowledgeBaseId, orgId);
 
     console.log('Knowledge base sync initiated');
+    return knowledgeBaseId;
   } catch (error) {
     console.error('Error in knowledge base creation:', error);
     throw error instanceof Error ? error : new Error('Failed to create knowledge base');
+  }
+}
+
+export async function fetchKnowledgeBaseChildren(knowledgeBaseId: string, resourcePath: string): Promise<Resource[]> {
+  const kbChildrenResourcesUrl = `${STACK_AI_BACKEND_URL}/knowledge_bases/${knowledgeBaseId}/resources/children`;
+
+  const data = {
+    resource_path: resourcePath,
+  };
+
+  const encodedQueryParams = new URLSearchParams(data).toString();
+  const url = `${kbChildrenResourcesUrl}?${encodedQueryParams}`;
+
+  try {
+    const response = await GoogleDriveSession.get(url);
+    let resources: Resource[] = response.data;
+
+    if (!Array.isArray(resources)) {
+      resources = resources ? [resources] : [];
+    }
+
+    return resources;
+  } catch (error) {
+    console.error('Error fetching knowledge base children:', error);
+    return [];
   }
 }
